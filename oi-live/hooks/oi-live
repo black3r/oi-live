@@ -18,7 +18,7 @@ _try_mount() {
     fi
 
     local MYFS MOUNTCMD ID_FS_UUID ID_FS_UUID_ENC ID_FS_VERSION ID_FS_TYPE ID_FS_USAGE
-    MYFS=$(eval $(/sbin/blkid -o udev -p "$1"); echo $ID_FS_TYPE)
+    MYFS=$(eval $(/sbin/blkid -o udev -p "$1" | grep ID_FS_TYPE); echo $ID_FS_TYPE)
     case "$MYFS" in
     "ntfs")
         # Use ntfs-3g instead of mount.
