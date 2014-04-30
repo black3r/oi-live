@@ -6,7 +6,7 @@ cd "$(dirname "$0")"
 
 KERNEL_VER=aufs_friendly
 BOOT_MODE=bios
-SYSLINUX_MODULES="chain.c32 cmd.c32 isolinux.bin reboot.c32 vesamenu.c32 whichsys.c32 ldlinux.c32 libcom32.c32 libutil.c32"
+SYSLINUX_MODULES="chain.c32 cmd.c32 isolinux.bin reboot.c32 vesamenu.c32 whichsys.c32 ldlinux.c32 libcom32.c32 libutil.c32 poweroff.c32"
 
 cp -a boot "$WORK_DIR/boot"
 cp -a /boot/memtest86+/memtest.bin "$WORK_DIR/boot/"
