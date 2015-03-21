@@ -8,6 +8,7 @@ install/oi-live
 install/oi-live-poweroff
 hooks/oi-live
 hooks/oi-live-poweroff
+mke2fs
 "
 C_PROGRAMS="
 ntfs-3g-initrd-wrapper

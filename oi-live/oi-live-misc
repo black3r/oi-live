@@ -5,8 +5,11 @@ OI_UPDATE_MNTPTS=${OI_UPDATE_MNTPTS:-"/mnt/oi_update"}
 OI_RW_IMAGE=${OI_RW_IMAGE:-"oi-rw.img"}
 OI_SWAPFILE=${OI_SWAPFILE:-"oi-swap.swp"}
 OI_SWAPFILE_SIZE=${OI_SWAPFILE_SIZE:-512}
+OI_RW_SIZE=${OI_RW_SIZE:-5120}
 OI_SUPPORTED_FS=${OI_SUPPORTED_FS:-"isofs ntfs vfat ext4 ext3 ext2 xfs reiserfs"}
 OI_URL=${OI_URL:-"/oi-live.tar.gz"}
+OI_UPGRADE_MOUNTPOINT=${OI_UPGRADE_MOUNTPOINT:-"/mnt/oi_upgrade"}
+OI_INSTALL_MOUNTPOINT=${OI_INSTALL_MOUNTPOINT:-"/mnt/oi_install"}
 
 oi_runshell() {
     if [ -n "$shell" ]; then
@@ -19,10 +22,6 @@ oi_abort() {
     if [ -n "$oi_debug" ]; then
         oi_runshell
     else
-#        /bin/umount $OI_MOUNTPOINT >/dev/null 2>&1
-#        sync
-#        sleep 15
-#        reboot
         echo "s" > /proc/sysrq-trigger
         sleep 1
         echo "u" > /proc/sysrq-trigger
@@ -30,5 +29,19 @@ oi_abort() {
         echo "s" > /proc/sysrq-trigger
         sleep 15
         echo "b" > /proc/sysrq-trigger
+    fi
+}
+
+oi_abort_shutdown() {
+    if [ -n "$oi_debug" ]; then
+        oi_runshell
+    else
+        echo "s" > /proc/sysrq-trigger
+        sleep 1
+        echo "u" > /proc/sysrq-trigger
+        sleep 1
+        echo "s" > /proc/sysrq-trigger
+        sleep 15
+        echo "o" > /proc/sysrq-trigger
     fi
 }

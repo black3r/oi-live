@@ -38,9 +38,87 @@ _try_mount() {
 
 # Mounts the topmost filesystem containing all the required image files.
 _mount_topmost_filesystem () {
-    local DEVICES CDROMS HDDS MYDEV
-    CDROMS="/dev/sr? /dev/scd? /dev/scd?? /dev/sd? /dev/hd?"
-    HDDS="/dev/sd?[1-9] /dev/sd?[1-9][0-9] /dev/hd?[1-9] /dev/hd?[1-9][0-9]"
+    local DEVICES CDROMS HDDS MYDEV partitions drive part UPGRADE_SRC INSTALL_SRC
+    # Treats all removable drives as CDROMS (including USB flash drives)
+    CDROMS=""
+    HDDS=""
+
+    # Mount a tmpfs over /mnt so we can bind and move it later.
+    mount -t tmpfs tmpfs /mnt
+
+    for drive in `ls /sys/block`; do
+        blkid /dev/$drive > /dev/null
+        if [ $? -eq 0 ]; then
+            if [ "rom" = $(lsblk /dev/$drive --output TYPE | tail -n+2 | head -n 1) ]; then
+                partitions="/dev/$drive"
+            else
+                partitions=""
+                for part in `lsblk /dev/$drive -l --output NAME | tail -n+3`; do
+                    partitions="$partitions /dev/$part"
+                done
+            fi
+
+            if [ $(cat /sys/block/$drive/removable) -ne 0 ]; then
+                CDROMS="$CDROMS $partitions"
+            else
+                HDDS="$HDDS $partitions"
+            fi
+        fi
+    done
+
+    # If doing local install try to locate removable medium with required files
+    if [ -n "$oi_localinstall" ]; then
+        mkdir -p "$OI_INSTALL_MOUNTPOINT"
+
+        if [ -n "$install_src" ]; then
+            INSTALL_SRC="$install_src"
+        else
+            INSTALL_SRC="$CDROMS"
+        fi
+
+        for MYDEV in $INSTALL_SRC; do
+            echo -n "Trying to mount $MYDEV read-only... "
+            if ! _try_mount "$MYDEV" "$OI_INSTALL_MOUNTPOINT" "ro"; then
+                echo "failed."
+            else
+                echo "success."
+                if [ -r "$OI_INSTALL_MOUNTPOINT/$OI_LIVE_IMAGE" ]; then
+                    echo "Found $OI_LIVE_IMAGE on $MYDEV."
+                    break
+                else
+                    echo "$OI_LIVE_IMAGE not found on $MYDEV."
+                    umount "$MYDEV" >/dev/null 2>&1
+                fi
+            fi
+        done
+    fi
+
+    # If doing usb upgrade try to locate removable medium with required files
+    if [ -n "$oi_upgrade" ]; then
+        mkdir -p "$OI_UPGRADE_MOUNTPOINT"
+
+        if [ -n "$upgrade_src" ]; then
+            UPGRADE_SRC="$upgrade_src"
+        else
+            UPGRADE_SRC="$CDROMS"
+        fi
+
+        for MYDEV in $UPGRADE_SRC; do
+            echo -n "Trying to mount $MYDEV read-only..."
+            if ! _try_mount "$MYDEV" "$OI_UPGRADE_MOUNTPOINT" "ro"; then
+                echo "failed."
+            else
+                echo "success."
+                if ls $OI_UPGRADE_MOUNTPOINT/$OI_LIVE_UPDATES &>/dev/null; then
+                    echo "Found OI updates on $MYDEV."
+                    break
+                else
+                    echo "OI updates not found on $MYDEV."
+                    umount "$MYDEV" >/dev/null 2>&1
+                fi
+            fi
+        done
+    fi
 
     # Depending on the kernel cmdline, choose the right search order.
     if [ -z "$fromcd" ]; then
@@ -54,8 +132,6 @@ _mount_topmost_filesystem () {
         DEVICES="$oi_root"
     fi
 
-    # Mount a tmpfs over /mnt so we can bind and move it later.
-    mount -t tmpfs tmpfs /mnt
     mkdir -p "$OI_MOUNTPOINT"
 
     for MYDEV in $DEVICES; do
@@ -66,7 +142,7 @@ _mount_topmost_filesystem () {
             echo "failed."
         else
             echo "success."
-            if [ -z "$install" ]; then
+            if [ -z "$install""$oi_localinstall" ]; then
                 # Unless we're going to install, search for our files.
                 if [ -r "$OI_MOUNTPOINT/$OI_LIVE_IMAGE" ]; then
                     echo "Found $OI_LIVE_IMAGE on $MYDEV."
@@ -102,7 +178,7 @@ _mount_topmost_filesystem () {
         umount "$MYDEV" >/dev/null 2>&1
     done
 
-    if [ -z "$install" ]; then
+    if [ -z "$install""$oi_localinstall" ]; then
         echo "Failed to find $OI_LIVE_IMAGE on any available filesystem."
         echo "Aborting."
         oi_abort
@@ -116,6 +192,43 @@ _uninstall() {
     echo -n "Removing all OI-Live files from the disk... "
     rm -f "$OI_MOUNTPOINT/$OI_LIVE_IMAGE" "$OI_MOUNTPOINT/$OI_RW_IMAGE" "$OI_MOUNTPOINT/$OI_SWAPFILE" "$OI_MOUNTPOINT/"$OI_LIVE_UPDATES
     echo "done."
+}
+
+_upgrade() {
+    # Test if OI_UPGRADE_MOUNTPOINT is mounted
+    if grep -qs "$OI_UPGRADE_MOUNTPOINT" /proc/mounts; then
+        echo "Going to upgrade OI-Live on your hard drive..."
+        for update in $OI_UPGRADE_MOUNTPOINT/$OI_LIVE_UPDATES; do
+            cp -v "$update" -t "$OI_MOUNTPOINT/"
+        done
+    else
+        # If not, abort
+        echo "No upgrade media found. Aborting!"
+        oi_abort
+    fi
+}
+
+_localinstall() {
+    # Test if OI_INSTALL_MOUNTPOINT is mounted
+    local update
+    if grep -qs "$OI_INSTALL_MOUNTPOINT" /proc/mounts; then
+        echo "Going to install OI-Live onto hard drive..."
+        cp -v "$OI_INSTALL_MOUNTPOINT/$OI_LIVE_IMAGE" -t "$OI_MOUNTPOINT/"
+        for update in $OI_INSTALL_MOUNTPOINT/$OI_LIVE_UPDATES; do
+            cp -v "$update" -t "$OI_MOUNTPOINT/"
+        done
+        umount "$OI_INSTALL_MOUNTPOINT"
+        echo "Now you can eject your installation media!"
+        # create swap file
+        _create_swap
+        # create rw image
+        _create_rw_image
+        echo "Finished."
+    else
+        # If not, abort
+        echo "No installation media found. Aborting!"
+        oi_abort
+    fi
 }
 
 _install() {
@@ -159,13 +272,24 @@ _install() {
     fi
     cd "$OLDWD"
 
+    _create_swap
+}
+
+_create_swap() {
     # Unless swap was forbidden, create a swapfile.
     if [ -z "$noswap" ]; then
         echo "Creating swapfile $OI_SWAPFILE..."
-        dd if=/dev/zero of="$OI_MOUNTPOINT/$OI_SWAPFILE" bs=1M count="$OI_SWAPFILE_SIZE"
+        # should create sparse file if supported == almost instant creation
+        dd of="$OI_MOUNTPOINT/$OI_SWAPFILE" bs=1M seek="$OI_SWAPFILE_SIZE" count=0
         mkswap "$OI_MOUNTPOINT/$OI_SWAPFILE"
         echo "Finished."
     fi
+}
+
+_create_rw_image() {
+    echo "Creating rw image $OI_RW_IMAGE..."
+    dd of="$OI_MOUNTPOINT/$OI_RW_IMAGE" bs=1M seek="$OI_RW_SIZE" count=0
+    mkfs.ext4 -F "$OI_MOUNTPOINT/$OI_RW_IMAGE"
 }
 
 _activate_swap() {
@@ -220,7 +344,7 @@ _mount_images_and_aufs() {
             oi_abort
         fi
         if ! (
-            mount -o rw -t ext3 "/dev/loop1" /mnt/rwpart >/dev/null 2>&1
+            mount -o rw -t ext4 "/dev/loop1" /mnt/rwpart >/dev/null 2>&1
         ); then
             mount -t tmpfs tmpfs /mnt/rwpart
             echo "failed. Using only ramdisk..."
@@ -288,15 +412,23 @@ oi_live_mount_handler() {
 
     if [ -n "$uninstall" ]; then
         _uninstall
+        _debug_shell
     fi
 
-    _debug_shell
+    if [ -n "$oi_localinstall" ]; then
+        _localinstall
+        _debug_shell
+    fi
+
+    if [ -n "$oi_upgrade" ]; then
+        _upgrade
+        _debug_shell
+    fi
 
     if [ -n "$install" ]; then
         _install
+        _debug_shell
     fi
-
-    _debug_shell
 
     if [ -z "$noswap" ]; then
         _activate_swap
