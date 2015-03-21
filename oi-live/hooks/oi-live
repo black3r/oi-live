@@ -170,8 +170,14 @@ _mount_topmost_filesystem () {
                 if ! _try_mount "$MYDEV" "$OI_MOUNTPOINT" "rw"; then
                     echo "failed."
                 else
-                    echo "success."
-                    return 0
+                    # check if we got enough space for installation.
+                    if [ $(df -m $OI_MOUNTPOINT | tail -1 | awk '{print $4}') -gt 5120 ]; then
+
+                        echo "success."
+                        return 0
+                    else
+                        echo "not enough free space!"
+                    fi
                 fi
             fi
         fi
