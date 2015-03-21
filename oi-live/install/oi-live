@@ -16,6 +16,7 @@ build()
     add_binary ntfs-3g
     add_binary /usr/lib/initcpio/ntfs-3g-initrd-wrapper /usr/bin/ntfs-3g-initrd-wrapper
     add_binary udp-receiver
+    add_binary pv
     add_binary /usr/lib/initcpio/mke2fs /usr/bin/mkfs.ext4
     add_runscript
 }

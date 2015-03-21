@@ -199,7 +199,8 @@ _upgrade() {
     if grep -qs "$OI_UPGRADE_MOUNTPOINT" /proc/mounts; then
         echo "Going to upgrade OI-Live on your hard drive..."
         for update in $OI_UPGRADE_MOUNTPOINT/$OI_LIVE_UPDATES; do
-            cp -v "$update" -t "$OI_MOUNTPOINT/"
+            basename $update
+            pv "$update" > "$OI_MOUNTPOINT/$(basename $update)"
         done
     else
         # If not, abort
@@ -213,9 +214,11 @@ _localinstall() {
     local update
     if grep -qs "$OI_INSTALL_MOUNTPOINT" /proc/mounts; then
         echo "Going to install OI-Live onto hard drive..."
-        cp -v "$OI_INSTALL_MOUNTPOINT/$OI_LIVE_IMAGE" -t "$OI_MOUNTPOINT/"
+        echo $OI_LIVE_IMAGE
+        pv "$OI_INSTALL_MOUNTPOINT/$OI_LIVE_IMAGE" > "$OI_MOUNTPOINT/$OI_LIVE_IMAGE"
         for update in $OI_INSTALL_MOUNTPOINT/$OI_LIVE_UPDATES; do
-            cp -v "$update" -t "$OI_MOUNTPOINT/"
+            basename $update
+            pv "$update" > "$OI_MOUNTPOINT/$(basename $update)"
         done
         umount "$OI_INSTALL_MOUNTPOINT"
         echo "Now you can eject your installation media!"
