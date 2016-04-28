@@ -22,3 +22,5 @@ for file in $C_PROGRAMS; do
     gcc -Os -o "/usr/lib/initcpio/${file}" "oi-live/${file}.c"
     strip "/usr/lib/initcpio/${file}"
 done
+
+cp -av config/mkinitcpio.conf /etc/mkinitcpio.oi-live.conf
