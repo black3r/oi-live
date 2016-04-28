@@ -288,8 +288,8 @@ _create_swap() {
     # Unless swap was forbidden, create a swapfile.
     if [ -z "$noswap" ]; then
         echo "Creating swapfile $OI_SWAPFILE..."
-        # should create sparse file if supported == almost instant creation
-        dd of="$OI_MOUNTPOINT/$OI_SWAPFILE" bs=1M seek="$OI_SWAPFILE_SIZE" count=0
+        # swap file should not be sparse
+        dd if=/dev/zero of="$OI_MOUNTPOINT/$OI_SWAPFILE" bs=1M count="$OI_SWAPFILE_SIZE"
         mkswap "$OI_MOUNTPOINT/$OI_SWAPFILE"
         echo "Finished."
     fi
@@ -297,6 +297,7 @@ _create_swap() {
 
 _create_rw_image() {
     echo "Creating rw image $OI_RW_IMAGE..."
+    # should create sparse file if supported == almost instant creation
     dd of="$OI_MOUNTPOINT/$OI_RW_IMAGE" bs=1M seek="$OI_RW_SIZE" count=0
     mkfs.ext4 -F "$OI_MOUNTPOINT/$OI_RW_IMAGE"
 }
@@ -421,7 +422,7 @@ oi_live_mount_handler() {
 
     if [ -n "$uninstall" ]; then
         _uninstall
-        _debug_shell
+        oi_abort_shutdown
     fi
 
     if [ -n "$oi_localinstall" ]; then
