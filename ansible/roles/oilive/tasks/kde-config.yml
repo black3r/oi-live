@@ -1,0 +1,4 @@
+- name: enable sddm
+  systemd:
+    name: sddm
+    enabled: yes

@@ -1,0 +1,116 @@
+#!/bin/bash
+
+# Pusta oi-live firewall, pokial sme v contest mode.
+CMDLINE=$(cat /proc/cmdline)
+case $CMDLINE in
+*contest*)
+    ;;
+*)
+    exit
+    ;;
+esac
+
+EXCEPTIONS=("{{contest_server}}")
+
+ROUTE=/sbin/route
+IFCONFIG=/sbin/ifconfig
+IPTABLES=/usr/sbin/iptables
+
+if [ -z "$1" -o -z "$2" ]; then
+    echo "$0: Not enough parameters." 1>&2
+    exit 1
+fi
+
+logger "$0: run with parameters $*"
+
+case "$2" in
+up)
+    # firewall
+    GW=""
+    COUNT=0
+    logger "$0: Trying to determine the default gateway..."
+    while [ "$GW" == "" -a "$COUNT" != "20" ]; do
+        sleep 1
+        GW=`$ROUTE -n | grep "^0.0.0.0" | head -n1 | awk '{ print $2; }'`
+        #logger "$0: $($ROUTE -n)"
+        COUNT=$(( $COUNT + 1 ))
+    done
+
+    if [ "$GW" != "" ]; then
+        logger "$0: Gateway is $GW"
+        logger "$0: Trying to determine the IP address..."
+        logger "$0: IP is $MYIP, setting firewall rules..."
+
+        $IPTABLES -F INPUT
+        $IPTABLES -F FORWARD
+        $IPTABLES -F OUTPUT
+
+        $IPTABLES -P INPUT DROP
+        $IPTABLES -P FORWARD DROP
+        $IPTABLES -P OUTPUT DROP
+
+        echo "Allowing ssh!"
+
+        $IPTABLES -A INPUT -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+        $IPTABLES -A OUTPUT -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+        
+        echo "Allowing DNS"
+
+        $IPTABLES -A OUTPUT -p udp --dport 53 -j ACCEPT
+        $IPTABLES -A INPUT -p udp --sport 53 -j ACCEPT
+        
+        echo "Gateway: $GW"
+
+        $IPTABLES -I INPUT -s $GW -j ACCEPT
+        $IPTABLES -I OUTPUT -d $GW -j ACCEPT
+
+        echo "Detecting my IP addresses!"
+        MYIPS=`$IFCONFIG | grep "inet" | grep -v "inet6" | awk '{ print $2; }'`
+        for MYIP in $MYIPS; do
+            echo "My IP: $MYIP"
+
+            $IPTABLES -I INPUT -s $MYIP -d $MYIP -j ACCEPT
+            $IPTABLES -I OUTPUT -s $MYIP -d $MYIP -j ACCEPT
+        done
+
+        for exc in "${EXCEPTIONS[@]}"; do
+            echo "Exception: $exc"
+            $IPTABLES -I INPUT -s $exc -j ACCEPT
+            $IPTABLES -I OUTPUT -d $exc -j ACCEPT
+        done
+
+        $IPTABLES -I INPUT -i lo -j ACCEPT
+        $IPTABLES -I OUTPUT -o lo -j ACCEPT
+
+        $IPTABLES -I INPUT -m state --state ESTABLISHED -j ACCEPT
+        $IPTABLES -I INPUT -m state --state RELATED -j ACCEPT
+        $IPTABLES -I INPUT -m state --state INVALID -j DROP
+
+        $IPTABLES -I OUTPUT -m state --state ESTABLISHED -j ACCEPT
+        $IPTABLES -I OUTPUT -m state --state RELATED -j ACCEPT
+        $IPTABLES -I OUTPUT -m state --state INVALID -j DROP
+    else
+        logger "$0: failed!"
+    fi
+    ;;
+down)
+    echo 'putting firewall down!'
+    $IPTABLES -F
+    
+    echo "Default policy to ACCEPT"
+    $IPTABLES -P INPUT ACCEPT
+    $IPTABLES -P FORWARD ACCEPT
+    $IPTABLES -P OUTPUT ACCEPT
+
+    echo "Detecting my IP addresses!"
+    MYIPS=`$IFCONFIG | grep "inet" | grep -v "inet6" | awk '{print $2; }'`
+    for MYIP in $MyiPS; do
+        echo "My IP: $MYIP"
+        $IPTABLES -I INPUT -s $MYIP -d $MYIP -j ACCEPT
+        $IPTABLES -I OUTPUT -s $MYIP -d $MYIP -j ACCEPT
+    done
+    ;;
+*)    
+    echo "valid commands are 'up' and 'down'"
+    ;;
+esac

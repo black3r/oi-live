@@ -1,0 +1,43 @@
+- name: ensure /home/vagrant/build/ directory exists
+  file:
+    path: /home/vagrant/build/
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0755
+
+- name: Unpack custom busybox
+  unarchive:
+    src: mkinitcpio-busybox-1.25.1-1.src.tar.gz
+    dest: /home/vagrant/build/
+    creates: /home/vagrant/build/mkinitcpio-busybox
+  become: yes
+  become_user: vagrant
+  become_method: su
+
+- name: Create busybox package
+  command: makepkg
+  args:
+    chdir: /home/vagrant/build/mkinitcpio-busybox/
+    creates: /home/vagrant/build/mkinitcpio-busybox/mkinitcpio-busybox-1.25.1-1-x86_64.pkg.tar.xz
+  become: yes
+  become_user: vagrant
+  become_method: su
+  register: busyboxbuild
+
+- name: Install busybox package
+  command: yaourt -U --noconfirm ./mkinitcpio-busybox-1.25.1-1-x86_64.pkg.tar.xz
+  args:
+    chdir: /home/vagrant/build/mkinitcpio-busybox/
+  when: busyboxbuild|changed
+
+- name: Install udpcast
+  command: yaourt -S --needed --noconfirm udpcast
+  environment:
+    PATH: /usr/bin/core_perl/:{{ ansible_env.PATH }}
+    # Don't know why, but this folder is not in PATH when ansible runs this
+  become: yes
+  become_user: vagrant
+  become_method: su
+
+

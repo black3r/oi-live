@@ -1,0 +1,16 @@
+- name: oilive mountpoint
+  file:
+    path: /mnt/oilive/
+    state: directory
+
+- name: work directory
+  file:
+    path: /root/build/work/
+    state: directory
+
+- name: full-build script
+  template:
+    src: full-build.sh.j2
+    mode: 0755
+    owner: root
+    dest: /root/build/full-build.sh

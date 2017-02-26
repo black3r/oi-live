@@ -8,7 +8,6 @@ build()
     map add_module $OI_SUPPORTED_FS
     add_module fuse
     add_module squashfs
-    add_module aufs
     add_checked_modules fs/nls
 
     add_file /usr/lib/initcpio/oi-live-misc /oi-live-misc

@@ -1,0 +1,12 @@
+- name: Install required packages
+  pacman: name={{ item }} state=present
+  with_items:
+    - glibc
+    - zsh
+    - grml-zsh-config
+    - vim
+    - base-devel
+    - rsync
+    - cdrtools
+    - squashfs-tools
+    - syslinux # for isohybrid

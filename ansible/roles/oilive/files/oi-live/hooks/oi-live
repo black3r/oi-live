@@ -368,6 +368,9 @@ _mount_images_and_aufs() {
         fi
     fi
 
+    mkdir -p /mnt/rwpart/upper/
+    mkdir -p /mnt/rwpart/workdir/
+
     # If any update images are available, mount them as well.
     update_branches=""
     for oi_update in "$OI_MOUNTPOINT/"$OI_LIVE_UPDATES; do
@@ -380,15 +383,13 @@ _mount_images_and_aufs() {
             echo "failed (ignoring)."
         else
             echo "done."
-            # Build a list of branches for aufs. This is mainly for
-            # historical reasons; neither busybox mount nor klibc mount
-            # could remount aufs with more branches.
-            update_branches=":${update_mpt}=rr${update_branches}"
+            # Build a list of branches for overlayfs.
+            update_branches="${update_mpt}:${update_branches}"
         fi
     done
 
-    echo -n "Mounting root aufs into ${newroot}... "
-    mount -t aufs -o "br=/mnt/rwpart=rw${update_branches}:/mnt/oi-image=rr" aufs "${newroot}"
+    echo -n "Mounting root overlayfs into ${newroot}... "
+    mount -t overlay overlay -o "lowerdir=${update_branches}/mnt/oi-image,upperdir=/mnt/rwpart/upper,workdir=/mnt/rwpart/workdir" "${newroot}"
     echo "done."
 
     echo -n "Binding OI-Live filesystems into new root filesystem... "

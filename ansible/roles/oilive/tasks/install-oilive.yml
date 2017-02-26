@@ -1,0 +1,62 @@
+- name: mkinitcpio configuration file
+  copy:
+    src: mkinitcpio.conf
+    dest: /etc/mkinitcpio.oi-live.conf
+
+- name: mkinitcpio preset file
+  copy:
+    src: mkinitcpio.preset
+    dest: /etc/mkinitcpio.d/oi-live.preset
+
+# Static mke2fs compiled from sources using LDFLAGS=-static env option
+- name: install oi-live hooks and static mke2fs
+  copy:
+    src: oi-live/
+    dest: /usr/lib/initcpio/
+    owner: root
+
+- name: make mke2fs executable
+  file:
+    path: /usr/lib/initcpio/mke2fs
+    state: file
+    mode: 0775
+
+- name: compile ntfs-3g-initrd-wrapper
+  command: gcc -Os -o ntfs-3g-initrd-wrapper ntfs-3g-initrd-wrapper.c
+  args:
+    chdir: /usr/lib/initcpio/
+    creates: /usr/lib/initcpio/ntfs-3g-initrd-wrapper
+  register: ntfs3gbuild
+
+- name: strip ntfs-3g-initrd-wrapper
+  command: strip /usr/lib/initcpio/ntfs-3g-initrd-wrapper
+  when: ntfs3gbuild|changed
+
+- name: create oi-live/boot directory in /root/
+  file:
+    path: /root/oi-live/boot/
+    state: directory
+    owner: root
+
+- name: copy boot tarball build scripts
+  copy:
+    src: boot/
+    dest: /root/oi-live/boot/
+    owner: root
+
+- name: create boot symlink
+  file:
+    src: "../boot"
+    dest: /root/oi-live/boot/boot
+    state: link
+
+- name: copy boot build script
+  copy:
+    src: prepare_boot.sh
+    dest: /root/oi-live/prepare_boot.sh
+
+- name: ensure build script is executable
+  file:
+    path: /root/oi-live/prepare_boot.sh
+    mode: 0755
+    owner: root

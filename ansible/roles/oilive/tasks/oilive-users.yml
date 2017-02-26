@@ -1,0 +1,24 @@
+- name: user contest
+  user:
+    name: contest
+    comment: "OI contestant"
+    uid: 1002
+    password: U6aMy0wojraho # enable password-less login
+    shell: /usr/bin/zsh
+    group: users
+    groups: video,audio,power
+
+- name: user training
+  user:
+    name: training
+    comment: "OI training"
+    password: U6aMy0wojraho # enable password-less login
+    uid: 1001
+    shell: /usr/bin/zsh
+    group: users
+    groups: wheel,log,locate,rfkill,games,network,video,audio,optical,floppy,storage,power
+
+- name: root shell
+  user:
+    name: root
+    shell: /usr/bin/zsh

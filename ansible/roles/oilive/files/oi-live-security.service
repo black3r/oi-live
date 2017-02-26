@@ -1,0 +1,11 @@
+[Unit]
+Description=OI-Live security script
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/root/security/admin_script
+ExecStop=/root/security/admin_script.undo
+
+[Install]
+WantedBy=multi-user.target

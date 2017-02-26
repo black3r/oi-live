@@ -1,0 +1,13 @@
+- name: Use archlinuxfr repository
+  blockinfile:
+    dest: /etc/pacman.conf
+    block: |
+      [archlinuxfr]
+      SigLevel = Never
+      Server = http://repo.archlinux.fr/$arch
+
+- name: Install yaourt
+  pacman:
+    name: yaourt
+    state: present
+    update_cache: yes

@@ -1,0 +1,57 @@
+- name: configure sysctl (swappiness and sysrq)
+  copy:
+    src: 99-sysctl.conf
+    dest: /etc/sysctl.d/99-sysctl.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: configure wireless-regdom
+  lineinfile:
+    dest: /etc/conf.d/wireless-regdom
+    regexp: WIRELESS_REGDOM="SK"
+    line: WIRELESS_REGDOM="SK"
+
+- name: configure makepkg
+  lineinfile:
+    dest: /etc/makepkg.conf
+    regexp: MAKEFLAGS=
+    line: MAKEFLAGS="-j4"
+
+# This machine should have different UUIDs than the base box because the
+# builder built from the same box will be mounting its HDD.
+- name: change partition UUID /dev/sda1
+  command: tune2fs /dev/sda1 -U e1d84c7d-9152-4901-938d-42bd5345f463
+
+- name: change partition UUID /dev/sda3
+  command: tune2fs /dev/sda3 -U 9701f3d5-ee2f-43fb-9e5a-2b669ebb9a99
+
+- name: fix boot configuration after changing UUID of /
+  replace:
+    dest: /boot/grub/grub.cfg
+    regexp: "2ff69d04-d5ec-47b0-a92b-579b0a1d7b2c"
+    replace: "9701f3d5-ee2f-43fb-9e5a-2b669ebb9a99"
+
+- name: fix boot configuration after changing UUID of /boot
+  replace:
+    dest: /boot/grub/grub.cfg
+    regexp: "7b2ec91d-956c-4915-88ec-aed9ad163e7e"
+    replace: "e1d84c7d-9152-4901-938d-42bd5345f463"
+
+- name: enable systemd services
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+  with_items:
+    - NetworkManager
+    - acpid
+    - gpm
+
+- name: disable systemd services
+  systemd:
+    name: "{{ item }}"
+    enabled: no
+  with_items:
+    - netctl@enp0s3
+
+

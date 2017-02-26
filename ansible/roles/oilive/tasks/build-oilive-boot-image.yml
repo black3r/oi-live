@@ -1,0 +1,11 @@
+- name: build oi_boot.img
+  command: mkinitcpio -p oi-live
+  args:
+    creates: /boot/oi_boot.img # TODO Comment this out in production so that the generated image is always fresh
+
+- name: build oi-boot.tar
+  command: /usr/bin/bash /root/oi-live/prepare_boot.sh
+  args:
+    creates: /vagrant/oi-boot.tar
+
+

@@ -1,0 +1,55 @@
+- name: copy security service files to /root/security
+  copy:
+    src: security/
+    dest: /root/security/
+    owner: root
+
+- name: generate firewall configuration
+  template:
+    src: oi-live-firewall.j2
+    dest: /root/security/oi-live-firewall
+
+- name: make scripts executable
+  file:
+    name: /root/security/{{ item }}
+    state: file
+    mode: 0755
+  with_items:
+    - admin_script
+    - admin_script.undo
+    - oi-live-firewall
+
+- name: install security service
+  copy:
+    src: oi-live-security.service
+    dest: /etc/systemd/system/oi-live-security.service
+
+- name: enable security service
+  systemd:
+    daemon-reload: yes
+    name: oi-live-security
+    enabled: yes
+
+- name: install firewall
+  file:
+    src: /root/security/oi-live-firewall
+    dest: /etc/NetworkManager/dispatcher.d/oi-live-firewall
+    state: link
+
+- name: install polkit rules
+  copy:
+    src: rules.d/
+    dest: /etc/polkit-1/rules.d/
+    owner: root
+
+- name: ensure correct permissions on polkit rules
+  file:
+    name: /etc/polkit-1/rules.d/{{ item }}
+    state: file
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - 50-nm.rules
+    - 50-udisks.rules
+    - 50-time.rules

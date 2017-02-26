@@ -1,0 +1,81 @@
+# This is the standard software pack for oi-live
+- name: Install software packages
+  pacman: name={{ item }} state=present
+  with_items:
+    - acpi # battery status for laptops
+    - acpid # sleep/hibernate support
+    - alsa-firmware
+    - alsa-tools
+    - alsa-utils
+    - bc # calculator
+    - chromium
+    - codeblocks
+    - cronie # cron
+    - ddd # debugging tool
+    - ddrescue # better dd
+    - dosfstools # mkfs.vfat
+    - e2fsprogs
+    - efibootmgr
+    - elinks # CLI browser
+    - emacs
+    - espeak # text-to-speech support
+    - firefox
+    - gdb
+    - geany # text editor
+    - gimp
+    - git
+    - gnome-calculator
+    - gptfdisk
+    - gst-plugins-bad
+    - gst-plugins-base
+    - gst-plugins-good
+    - gst-plugins-ugly
+    - gvim
+    - hexedit
+    - htop # better top
+    - joe # text editor
+    - kate # text editor
+    - kdbg # debugging tool
+    - kdevelop # IDE
+    - konsole # terminal emulator
+    - kwrite # text editor
+    - lazarus # pascal compiler
+    - lazarus-qt # pascal IDE
+    - libpng12
+    - lsof # displays which files are currently in use
+    - mc
+    - mplayer
+    - mtools # MS-DOS disk support
+    - mtr # ping + traceroute combined
+    - net-tools # ifconfig
+    - network-manager-applet # NM GUI configuration tool
+    - networkmanager
+    - openssh
+    - p7zip
+    - qtcreator
+    - reiserfsprogs
+    - rsync
+    - screen # terminal multiplexing
+    - strace # debugging tool
+    - tree # tree view of directory
+    - tmux # terminal multiplexing
+    - valgrind # debugging tool
+    - wget
+    - xorg
+    - xorg-apps
+    - xorg-drivers
+    - xterm # terminal (required for codeblocks to work properly)
+    - zip
+# TODO: maybe clean this up a bit, move KDE/Qt apps to KDE pack,
+# replace gnome-calculator with KDE calculator for KDE pack and so on...
+
+# These parts of the software pack are only available from AUR
+- name: Install software packages from AUR
+  command: yaourt -S --needed --noconfirm {{ item }}
+  become: yes
+  become_user: vagrant
+  become_method: su
+  with_items:
+    - cppreference
+    - cppreference-qt
+    - ttf-ms-fonts

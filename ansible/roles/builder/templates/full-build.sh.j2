@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+WORK_DIR=/root/build/work/
+ISO_DIR=/root/build/iso
+SQUASH_PATH="$ISO_DIR/oi-live.img"
+SRC_MOUNT=/mnt/oilive/
+SRC_DRIVE=/dev/sdb3
+ISO_PATH=/vagrant/oi-live-{{version}}.iso
+OI_BOOT_PATH=/vagrant/oi-boot.tar
+
+mount -o ro "$SRC_DRIVE" "$SRC_MOUNT"
+# Copy only the important files from source tree
+sudo rsync -avHAS --delete -h --stats -x -f '+ /root/.screenrc' -f '+ /root/.vimrc' -f '+ /root/security' -f '+ /root/.ssh' -f '+ /root/.ssh/authorized_keys' -f '+ /root/.ssh/known_hosts' -f '+ /root/oi-live' -f '- /root/*' -f '- /root/.ssh/*' -f 'P /var/log/[bw]tmp' -f '- /var/cache/pacman/*' '-f '- /var/log/*' -f '- /var/tmp/*' -f '- /tmp/*' -f '+ /var/lib/pacman/local' -f '- /var/lib/pacman/*' -f 'P /etc/fstab' -f '- /etc/fstab' "$SRC_MOUNT" "$WORK_DIR"
+mkdir -p "$ISO_DIR"
+rm -rf "$ISO_DIR/*"
+# Create squashfs
+sudo ionice -c 3 mksquashfs "$WORK_DIR" "$SQUASH_PATH" -comp xz -b 1M -Xdict-size 100%
+# Unpack oi-boot.tar
+cd "$ISO_DIR"
+tar xf "$OI_BOOT_PATH"
+# Build the iso
+time ionice -c 3 mkisofs -pad -l -r -J -v -posix-L -x ./boot/boot -no-emul-boot -boot-load-size 4 -boot-info-table -b boot/syslinux/isolinux.bin -c boot/syslinux/boot.cat -hide-rr-moved -o "$ISO_PATH" -V "OI-Live {{version}}" ./
+isohybrid "$ISO_PATH"
+

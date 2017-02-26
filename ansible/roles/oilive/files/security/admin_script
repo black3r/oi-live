@@ -1,0 +1,32 @@
+#! /bin/sh
+
+CMDLINE=`cat /proc/cmdline`
+case $CMDLINE in
+*contest*)
+# Autologin into "contest" account when in contest mode    
+    rm /etc/sddm.conf
+    ln -s /etc/sddm.contest.conf /etc/sddm.conf
+    ;;
+*)
+    rm /etc/sddm.conf
+    ln -s /etc/sddm.base.conf /etc/sddm.conf
+    exit
+    ;;
+esac
+
+# usage: setrights <file> <uid.gid> <mode>
+setrights() {
+    if [ -f "$1" ]; then
+	chmod $3 "$1"
+	chown $2 "$1"
+    fi
+}
+
+#passwd -l root
+passwd -l training
+
+chmod 700 /mnt
+chown root.root /mnt
+
+chmod 700 /media
+chown root.root /media

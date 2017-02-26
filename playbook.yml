@@ -1,0 +1,19 @@
+---
+- name: Install OI-Live for the OI-Live host
+  hosts: oilive
+  become: true
+  become_user: root
+  become_method: sudo
+
+  roles:
+    - base
+    - oilive
+
+- name: Install Builder for the Builder host
+  hosts: builder
+  become: true
+  become_user: root
+  become_method: sudo
+
+  roles:
+    - base

@@ -1,0 +1,22 @@
+- include: base-packages.yml
+
+- include: custom-packages.yml
+
+- include: oilive-users.yml
+
+- include: install-oilive.yml
+
+- include: software-packages.yml
+
+- include: kde-packages.yml
+
+- include: security.yml
+
+# Run config after every package is installed
+- include: config.yml
+
+# Run kde-config after kde-packages are installed
+- include: kde-config.yml
+
+# Always run this last
+- include: build-oilive-boot-image.yml

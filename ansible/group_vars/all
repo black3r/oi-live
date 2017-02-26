@@ -1,0 +1,10 @@
+---
+ansible_python_interpreter: /usr/bin/python2
+
+locales:
+- name: en_US.UTF-8
+  charset: UTF-8
+  default: true
+
+version: 2017
+contest_server: 158.195.16.154
