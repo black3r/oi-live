@@ -40,3 +40,7 @@
     upgrade: yes
 
 - include: yaourt.yml
+
+# Run all handlers after finishing the initial configuration
+# (so locales and hostname are ready)
+- meta: flush_handlers

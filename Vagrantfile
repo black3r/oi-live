@@ -3,6 +3,8 @@
 
 Vagrant.configure("2") do |config|
 
+  %x[mkdir -p ./output]
+
   config.ssh.insert_key = false
 
   # Two machines will be provisioned
@@ -18,7 +20,7 @@ Vagrant.configure("2") do |config|
   end
 
   # Magic shell command to find location of oilive virtual disk
-  disk_file = %x[VBoxManage list hdds | grep oilive3_oilive | awk '{ORS=""} {print $2}']
+  disk_file = %x[[ -f .vagrant/machines/oilive/virtualbox/id ] && VBoxManage showvminfo --machinereadable `cat .vagrant/machines/oilive/virtualbox/id` | grep "IDE Controller-0-0" | awk -F'=' '{ORS=""} {print $2}' | sed -e 's/^"//' -e 's/"$//']
 
   # Second will contain the tools for building the image from the 
   # first one's virtual disk connected as a second drive.

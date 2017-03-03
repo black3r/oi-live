@@ -1,0 +1,5 @@
+- name: run full-build
+  command: /bin/bash /root/build/full-build.sh
+  args:
+    chdir: /root/build/
+    creates: /vagrant/oi-live-{{version}}.iso

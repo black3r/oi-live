@@ -1,0 +1,19 @@
+// JS Polkit configuration file that allows all users to change local time
+// on the machine.
+
+polkit.addRule(function(action, subject) {
+    var actions = [
+      "org.gnome.clockapplet.mechanism.*",
+      "org.gnome.controlcenter.datetime.configure",
+      "org.kde.kcontrol.kcmclock.save",
+      "org.freedesktop.timedate1.set-time",
+      "org.freedesktop.timedate1.set-timezone",
+      "org.freedesktop.timedate1.set-local-rtc",
+      "org.freedesktop.timedate1.set-ntp",
+      "com.canonical.controlcenter.datetime.configure",
+      "org.mate.settingsdaemon.datetimemechanism.settime"
+    ];
+    if (actions.indexOf(action.id) !== -1) {
+        return polkit.Result.YES;
+    }
+});

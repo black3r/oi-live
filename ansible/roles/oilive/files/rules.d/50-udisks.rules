@@ -1,3 +1,6 @@
+// JS Polkit configuration file that only allows mounting external drives
+// (USB, CD, etc...) to users in the group "storage"
+
 polkit.addRule(function(action, subject) {
     var YES = polkit.Result.YES;
     var permission = {
@@ -16,8 +19,8 @@ polkit.addRule(function(action, subject) {
         "org.freedesktop.udisks2.filesystem-mount-other-seat": YES,
         "org.freedesktop.udisks2.encrypted-unlock-other-seat": YES,
         "org.freedesktop.udisks2.eject-media-other-seat": YES,
-        "org.freedesktop.udisks2.power-off-drive-other-seat": YES,
-    }
+        "org.freedesktop.udisks2.power-off-drive-other-seat": YES
+    };
     if (subject.isInGroup("storage")) {
         polkit.log("UDISKS Approved action: " + action);
         polkit.log("Subjet: " + subject);

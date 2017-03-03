@@ -1,3 +1,5 @@
 - include: base-packages.yml
 
 - include: builder-base.yml
+
+- include: run-build.yml

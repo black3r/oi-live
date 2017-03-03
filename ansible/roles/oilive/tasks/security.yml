@@ -52,4 +52,4 @@
   with_items:
     - 50-nm.rules
     - 50-udisks.rules
-    - 50-time.rules
+    - 50-usertime.rules

@@ -18,7 +18,8 @@
     group: users
     groups: wheel,log,locate,rfkill,games,network,video,audio,optical,floppy,storage,power
 
-- name: root shell
+- name: root shell and password
   user:
     name: root
     shell: /usr/bin/zsh
+    password: $6$rounds=656000$TuiOQmBsY2LOIx9l$UIL.7Ud28gIs04.ujctlLcgcwn0pSD7M8CKNuIGNt6R5HnNWaz2tIcmmM1B5nO0XBvzrdB6LjGORVYedrfF4K1

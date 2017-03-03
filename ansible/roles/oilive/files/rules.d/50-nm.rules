@@ -1,16 +1,12 @@
+// JS Polkit configuration file that only allows changes to NetworkManager
+// configuration to users that are in the group "network"
+
 polkit.addRule(function(action, subject) {
-    var actions = [
-      "org.gnome.clockapplet.mechanism.*",
-      "org.gnome.controlcenter.datetime.configure",
-      "org.kde.kcontrol.kcmclock.save",
-      "org.freedesktop.timedate1.set-time",
-      "org.freedesktop.timedate1.set-timezone",
-      "org.freedesktop.timedate1.set-local-rtc",
-      "org.freedesktop.timedate1.set-ntp",
-      "com.canonical.controlcenter.datetime.configure",
-      "org.mate.settingsdaemon.datetimemechanism.settime"
-    ];
-    if (actions.indexOf(action.id) !== -1) {
-        return polkit.Result.YES;
+    if (action.id.indexOf("org.freedesktop.NetworkManager.") == 0) {
+        if (subject.isInGroup("network")) {
+            return polkit.Result.YES;
+        } else {
+            return polkit.Result.NO;
+        }
     }
 });

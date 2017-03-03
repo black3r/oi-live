@@ -10,7 +10,12 @@ OI_BOOT_PATH=/vagrant/oi-boot.tar
 
 mount -o ro "$SRC_DRIVE" "$SRC_MOUNT"
 # Copy only the important files from source tree
-sudo rsync -avHAS --delete -h --stats -x -f '+ /root/.screenrc' -f '+ /root/.vimrc' -f '+ /root/security' -f '+ /root/.ssh' -f '+ /root/.ssh/authorized_keys' -f '+ /root/.ssh/known_hosts' -f '+ /root/oi-live' -f '- /root/*' -f '- /root/.ssh/*' -f 'P /var/log/[bw]tmp' -f '- /var/cache/pacman/*' '-f '- /var/log/*' -f '- /var/tmp/*' -f '- /tmp/*' -f '+ /var/lib/pacman/local' -f '- /var/lib/pacman/*' -f 'P /etc/fstab' -f '- /etc/fstab' "$SRC_MOUNT" "$WORK_DIR"
+sudo rsync -avHAS --delete -h --stats -x -f '+ /root/.screenrc' -f '+ /root/.vimrc' -f '+ /root/security' -f '+ /root/.ssh' -f '+ /root/.ssh/authorized_keys' -f '+ /root/.ssh/known_hosts' -f '+ /root/oi-live' -f '- /root/*' -f '- /root/.ssh/*' -f 'P /var/log/[bw]tmp' -f '- /var/cache/pacman/*' -f '- /var/log/*' -f '- /var/tmp/*' -f '- /tmp/*' -f '+ /var/lib/pacman/local' -f '- /var/lib/pacman/*' -f 'P /etc/fstab' -f '- /etc/fstab' -f '- /home/vagrant' "$SRC_MOUNT" "$WORK_DIR"
+# Remove the vagrant user from the image
+mv "$WORK_DIR/etc/passwd" "$WORK_DIR/etc/passwd-"
+mv "$WORK_DIR/etc/shadow" "$WORK_DIR/etc/shadow-"
+grep -v vagrant "$WORK_DIR/etc/passwd-" > "$WORK_DIR/etc/passwd"
+grep -v vagrant "$WORK_DIR/etc/shadow-" > "$WORK_DIR/etc/shadow"
 mkdir -p "$ISO_DIR"
 rm -rf "$ISO_DIR/*"
 # Create squashfs

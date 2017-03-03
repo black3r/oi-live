@@ -18,5 +18,8 @@
 # Run kde-config after kde-packages are installed
 - include: kde-config.yml
 
+# Run all handlers before building image
+- meta: flush_handlers
+
 # Always run this last
 - include: build-oilive-boot-image.yml
