@@ -8,3 +8,8 @@ locales:
 
 version: 2017
 contest_server: 158.195.16.154
+
+# Will be used in theme metadata files
+author_name: "Roman Hudec"
+author_email: "roman.hudec@ksp.sk"
+oilive_web: "https://people.ksp.sk/~roman/oilive/"

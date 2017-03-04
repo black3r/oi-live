@@ -16,7 +16,7 @@
     uid: 1001
     shell: /usr/bin/zsh
     group: users
-    groups: wheel,log,locate,rfkill,games,network,video,audio,optical,floppy,storage,power
+    groups: log,locate,rfkill,games,network,video,audio,optical,floppy,storage,power
 
 - name: root shell and password
   user:

@@ -1,0 +1,37 @@
+- name: contest homedir base
+  unarchive:
+    src: homedirs-base.tar.xz
+    dest: /home/contest/
+    creates: /home/contest/.mozilla
+
+- name: training homedir base
+  unarchive:
+    src: homedirs-base.tar.xz
+    dest: /home/training/
+    creates: /home/training/.mozilla
+
+- name: contest homedir configuration files
+  copy:
+    src: home/
+    dest: /home/contest/
+
+- name: training homedir configuration files
+  copy:
+    src: home/
+    dest: /home/training/
+
+- name: contest homedir permissions
+  file:
+    path: /home/contest/
+    mode: u=rwX,g-rwx,o-rwx
+    owner: contest
+    group: users
+    recurse: yes
+
+- name: training homedir permissions
+  file:
+    path: /home/training/
+    mode: u=rwX,g-rwx,o-rwx
+    owner: training
+    group: users
+    recurse: yes

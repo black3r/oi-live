@@ -54,4 +54,19 @@
   with_items:
     - netctl@enp0s3
 
+- name: sddm configuration file
+  copy:
+    src: sddm.base.conf
+    dest: /etc/sddm.base.conf
+
+- name: sddm contest autologin configuration file
+  copy:
+    src: sddm.contest.conf
+    dest: /etc/sddm.contest.conf
+
+- name: sddm configuration file default symlink
+  file:
+    src: "./sddm.base.conf"
+    dest: /etc/sddm.conf
+    state: link
 

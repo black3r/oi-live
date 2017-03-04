@@ -1,0 +1,12 @@
+[Desktop Entry]
+Comment=
+Exec=kde-open /usr/share/doc/fpc-2.4.0/html/fpctoc.html
+Icon=accessories-dictionary
+Name=Freepascal docs
+NoDisplay=false
+StartupNotify=false
+Terminal=0
+TerminalOptions=
+Type=Application
+X-KDE-SubstituteUID=false
+X-KDE-Username=

@@ -1,0 +1,48 @@
+<!DOCTYPE Menu PUBLIC '-//freedesktop//DTD Menu 1.0//EN' 'http://www.freedesktop.org/standards/menu-spec/1.0/menu.dtd'>
+<Menu>
+ <Layout>
+  <Merge type="files" />
+  <Filename>STL manual.desktop</Filename>
+  <Merge type="menus" />
+  <Menuname>Chakra</Menuname>
+  <Menuname>Development</Menuname>
+  <Menuname>Education</Menuname>
+  <Menuname>Games</Menuname>
+  <Menuname>Graphics</Menuname>
+  <Menuname>Internet</Menuname>
+  <Menuname>Multimedia</Menuname>
+  <Menuname>Office</Menuname>
+  <Menuname>Science</Menuname>
+  <Menuname>Settingsmenu</Menuname>
+  <Menuname>System</Menuname>
+  <Menuname>Utilities</Menuname>
+  <Menuname>Applications</Menuname>
+  <Filename>kde4-kfind.desktop</Filename>
+  <Filename>kde4-Help.desktop</Filename>
+ </Layout>
+ <Include>
+  <Filename>STL manual.desktop</Filename>
+ </Include>
+ <Menu>
+  <Name>Development</Name>
+  <Layout>
+   <Merge type="files" />
+   <Filename>STL manual-2.desktop</Filename>
+   <Merge type="menus" />
+   <Menuname>Translation</Menuname>
+   <Menuname>Web Development</Menuname>
+   <Menuname>X-KDE-KDevelopIDE</Menuname>
+   <Filename>kde4-akonadiconsole.desktop</Filename>
+   <Filename>codeblocks.desktop</Filename>
+   <Filename>ddd.desktop</Filename>
+   <Filename>eclipse.desktop</Filename>
+   <Filename>java-monitoring-and-management-console.desktop</Filename>
+   <Filename>java-visualvm.desktop</Filename>
+   <Filename>lazarus.desktop</Filename>
+   <Filename>kde4-kdemod-nutcracker.desktop</Filename>
+  </Layout>
+  <Include>
+   <Filename>STL manual-2.desktop</Filename>
+  </Include>
+ </Menu>
+</Menu>

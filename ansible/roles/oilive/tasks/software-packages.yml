@@ -9,6 +9,7 @@
     - alsa-utils
     - bc # calculator
     - chromium
+    - cmake # kdevelop doesn't work properly for simple apps without this
     - codeblocks
     - cronie # cron
     - ddd # debugging tool

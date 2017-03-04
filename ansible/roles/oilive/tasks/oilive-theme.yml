@@ -1,0 +1,89 @@
+- name: plasma theme base folder
+  file:
+    path: /usr/share/plasma/look-and-feel/sk.oi.oilive.{{version}}
+    state: directory
+
+- name: unpack plasma theme base
+  unarchive:
+    src: plasma-base-theme.tar.xz
+    dest: /usr/share/plasma/look-and-feel/sk.oi.oilive.{{version}}/
+    creates: /usr/share/plasma/look-and-feel/sk.oi.oilive.{{version}}/contents
+
+- name: sddm theme base folder
+  file:
+    path: /usr/share/sddm/themes/oilive/
+    state: directory
+
+- name: unpack sddm theme base
+  unarchive:
+    src: sddm-theme-base.tar.xz
+    dest: /usr/share/sddm/themes/oilive/
+    creates: /usr/share/sddm/themes/oilive/Main.qml
+
+- name: wallpaper directory structure
+  file:
+    path: /usr/share/wallpapers/OI-Live-{{version}}/contents/images
+    state: directory
+
+- name: wallpaper images
+  copy:
+    src: theme/wallpapers/
+    dest: /usr/share/wallpapers/OI-Live-{{version}}/contents/images/
+
+- name: wallpaper metadata
+  template:
+    src: theme/wallpapers.metadata.desktop.j2
+    dest: /usr/share/wallpapers/OI-Live-{{version}}/metadata.desktop
+
+- name: wallpaper screenshot
+  copy:
+    src: theme/screenshots/wallpaper.png
+    dest: /usr/share/wallpapers/OI-Live-{{version}}/contents/screenshot.png
+
+- name: wallpaper symlink folder
+  file:
+    path: /usr/share/oilive/
+    state: directory
+
+- name: wallpaper symlink
+  file:
+    src: "/usr/share/wallpapers/OI-Live-{{version}}"
+    dest: /usr/share/oilive/current-theme
+    state: link
+
+- name: sddm metadata
+  template:
+    src: theme/sddm.metadata.desktop.j2
+    dest: /usr/share/sddm/themes/oilive/metadata.desktop
+
+- name: sddm screenshot
+  copy:
+    src: theme/screenshots/sddm.jpg
+    dest: /usr/share/sddm/themes/oilive/oilive.jpg
+
+- name: sddm wallpaper symlink folder
+  file:
+    path: /usr/share/sddm/themes/oilive/components/artwork
+    state: directory
+
+- name: sddm wallpaper symlink
+  file:
+    src: "/usr/share/oilive/current-theme/contents/images/1920x1080.png"
+    dest: /usr/share/sddm/themes/oilive/components/artwork/background.png
+    state: link
+
+- name: plasma metadata
+  template:
+    src: theme/plasma.metadata.desktop.j2
+    dest: /usr/share/plasma/look-and-feel/sk.oi.oilive.{{version}}/metadata.desktop
+
+- name: plasma background symlink folder
+  file:
+    path: /usr/share/plasma/look-and-feel/sk.oi.oilive.{{version}}/contents/components/artwork/
+    state: directory
+
+- name: plasma background symlink
+  file:
+    src: "/usr/share/oilive/current-theme/contents/images/1920x1080.png"
+    dest: /usr/share/plasma/look-and-feel/sk.oi.oilive.{{version}}/contents/components/artwork/background.png
+    state: link

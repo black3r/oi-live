@@ -12,6 +12,10 @@
 
 - include: security.yml
 
+- include: oilive-theme.yml
+
+- include: oilive-homedirs.yml
+
 # Run config after every package is installed
 - include: config.yml
 

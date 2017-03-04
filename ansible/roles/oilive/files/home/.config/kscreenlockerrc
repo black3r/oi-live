@@ -1,0 +1,5 @@
+[Daemon]
+Autolock=false
+
+[Greeter]
+Theme=sk.oi.oilive.2016
