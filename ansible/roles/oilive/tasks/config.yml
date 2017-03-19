@@ -61,6 +61,11 @@
     src: sddm.contest.conf
     dest: /etc/sddm.contest.conf
 
+- name: sddm configuration file should be absent before creating symlink
+  file:
+    dest: /etc/sddm.conf
+    state: absent
+
 - name: sddm configuration file default symlink
   file:
     src: "./sddm.base.conf"
