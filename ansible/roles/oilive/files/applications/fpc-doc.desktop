@@ -1,10 +1,10 @@
 [Desktop Entry]
-Comment=kde-open /opt/STL_doc/index.html
-Exec=
+Comment=
+Exec=kde-open /usr/share/doc/fpc-doc/doc/fpctoc.html
 Icon=accessories-dictionary
-Name=STL manual
+Name=FreePascal docs
 NoDisplay=false
-StartupNotify=true
+StartupNotify=false
 Terminal=0
 TerminalOptions=
 Type=Application

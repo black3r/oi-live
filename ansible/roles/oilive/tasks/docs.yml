@@ -1,0 +1,25 @@
+- name: documentation icons
+  copy:
+    src: applications/
+    dest: /usr/share/applications/
+
+- name: download freepascal documentation
+  get_url:
+    # Hope this is the official source and won't get cancelled on the way
+    # Doesn't hurt if it gets updated once in a while too :)
+    url: ftp://ftp.freepascal.org/fpc/dist/3.0.2/docs/doc-html.zip
+    dest: /tmp/fpcdoc.zip
+    checksum: sha256:e384bfa639bafa6e0a40910a1473b6c5d83047d4f6d289e57c7025db9b6a8b03
+
+- name: freepascal documentation parent directory
+  file:
+    path: /usr/share/doc/fpc-doc/
+    state: directory
+
+- name: unarchive freepascal documentation
+  unarchive:
+    remote_src: yes
+    src: /tmp/fpcdoc.zip
+    dest: /usr/share/doc/fpc-doc/
+  args:
+    creates: /usr/share/doc/fpc-doc/doc/fpctoc.html

@@ -16,6 +16,8 @@
 
 - include: oilive-homedirs.yml
 
+- include: docs.yml
+
 # Run config after every package is installed
 - include: config.yml
 

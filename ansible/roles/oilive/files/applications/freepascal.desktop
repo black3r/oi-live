@@ -1,8 +1,8 @@
 [Desktop Entry]
 Comment=
-Exec=kde-open /usr/share/doc/fpc-2.4.0/html/fpctoc.html
-Icon=accessories-dictionary
-Name=Freepascal docs
+Exec=xterm -e /usr/bin/fp
+Icon=xterm-color
+Name=FreePascal
 NoDisplay=false
 StartupNotify=false
 Terminal=0

@@ -20,6 +20,42 @@
     src: home/
     dest: /home/training/
 
+- name: look and feel package setting
+  lineinfile:
+    regexp: "LookAndFeelPackage"
+    line: "LookAndFeelPackage=sk.oi.oilive.{{version}}"
+    dest: /home/{{ item }}/.config/kdeglobals
+  with_items:
+    - training
+    - contest
+
+- name: splashrc theme setting
+  lineinfile:
+    regexp: "Theme"
+    line: "Theme=sk.oi.oilive.{{version}}"
+    dest: /home/{{ item }}/.config/ksplashrc
+  with_items:
+    - training
+    - contest
+
+- name: kscreenlockerrc theme setting
+  lineinfile:
+    regexp: "Theme"
+    line: "Theme=sk.oi.oilive.{{version}}"
+    dest: /home/{{ item }}/.config/kscreenlockerrc
+  with_items:
+    - training
+    - contest
+
+- name: startupconfig theme setting
+  lineinfile:
+    regexp: "ksplashrc_ksplash_theme"
+    line: "ksplashrc_ksplash_theme=sk.oi.oilive.{{version}}"
+    dest: /home/{{ item }}/.config/startupconfig
+  with_items:
+    - training
+    - contest
+
 - name: contest homedir permissions
   file:
     path: /home/contest/

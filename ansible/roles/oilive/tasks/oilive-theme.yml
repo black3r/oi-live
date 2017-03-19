@@ -87,3 +87,8 @@
     src: "/usr/share/oilive/current-theme/contents/images/1920x1080.png"
     dest: /usr/share/plasma/look-and-feel/sk.oi.oilive.{{version}}/contents/components/artwork/background.png
     state: link
+
+- name: bootloader background
+  copy:
+    src: theme/wallpapers/640x480.png
+    dest: /root/oi-live/boot/syslinux/oi.png

@@ -12,5 +12,6 @@
     - mkinitcpio-nfs-utils
     - ntfs-3g
     - pv # pipe viewer
+    - unzip # required for unzipping fpc documentation
     - memtest86+
 
