@@ -26,11 +26,8 @@
 - name: change partition UUID /dev/sda3
   command: tune2fs /dev/sda3 -U 9701f3d5-ee2f-43fb-9e5a-2b669ebb9a99
 
-- name: fix boot configuration after changing UUID of /
-  replace:
-    dest: /boot/grub/grub.cfg
-    regexp: "2ff69d04-d5ec-47b0-a92b-579b0a1d7b2c"
-    replace: "9701f3d5-ee2f-43fb-9e5a-2b669ebb9a99"
+- name: fix boot configuration after changing UUIDs of partitions
+  command: grub-mkconfig > /boot/grub/grub.cfg
 
 - name: fix boot configuration after changing UUID of /boot
   replace:
