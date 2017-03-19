@@ -1,15 +1,3 @@
-- name: contest homedir base
-  unarchive:
-    src: homedirs-base.tar.xz
-    dest: /home/contest/
-    creates: /home/contest/.mozilla
-
-- name: training homedir base
-  unarchive:
-    src: homedirs-base.tar.xz
-    dest: /home/training/
-    creates: /home/training/.mozilla
-
 - name: contest homedir configuration files
   copy:
     src: home/

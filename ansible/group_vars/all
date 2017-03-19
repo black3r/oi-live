@@ -8,6 +8,7 @@ locales:
 
 version: 2017
 contest_server: 158.195.16.154
+contest_web: "https://people.ksp.sk/~testovac/"
 
 # Will be used in theme metadata files
 author_name: "Roman Hudec"

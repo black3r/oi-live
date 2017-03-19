@@ -72,6 +72,13 @@
     dest: /usr/share/sddm/themes/oilive/components/artwork/background.png
     state: link
 
+- name: sddm theme ownership
+  file:
+    path: /usr/share/sddm/themes
+    owner: root
+    group: root
+    recurse: yes
+
 - name: plasma metadata
   template:
     src: theme/plasma.metadata.desktop.j2
@@ -88,7 +95,26 @@
     dest: /usr/share/plasma/look-and-feel/sk.oi.oilive.{{version}}/contents/components/artwork/background.png
     state: link
 
+- name: plasma theme ownership
+  file:
+    path: /usr/share/plasma/look-and-feel
+    owner: root
+    group: root
+    recurse: yes
+
 - name: bootloader background
   copy:
     src: theme/wallpapers/640x480.png
     dest: /root/oi-live/boot/syslinux/oi.png
+
+- name: chromium autostart
+  lineinfile:
+    dest: /usr/share/applications/chromium.desktop
+    regexp: "Exec="
+    line: "Exec=chromium {{contest_web}}"
+
+- name: firefox autostart
+  lineinfile:
+    dest: /usr/share/applications/firefox.desktop
+    regexp: "^Exec=((?!window).)*$"
+    line: "Exec=/usr/lib/firefox/firefox {{contest_web}}"
