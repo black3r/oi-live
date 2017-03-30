@@ -29,12 +29,6 @@
 - name: fix boot configuration after changing UUIDs of partitions
   command: grub-mkconfig > /boot/grub/grub.cfg
 
-- name: fix boot configuration after changing UUID of /boot
-  replace:
-    dest: /boot/grub/grub.cfg
-    regexp: "7b2ec91d-956c-4915-88ec-aed9ad163e7e"
-    replace: "e1d84c7d-9152-4901-938d-42bd5345f463"
-
 - name: enable systemd services
   systemd:
     name: "{{ item }}"
