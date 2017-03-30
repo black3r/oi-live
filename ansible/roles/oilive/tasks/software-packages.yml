@@ -80,3 +80,10 @@
     - cppreference
     - cppreference-qt
     - ttf-ms-fonts
+
+- name: Install Java support + IntelliJ Community + Eclipse Java
+  pacman: name={{ item }} state=present
+  with_items:
+    - jdk8-openjdk
+    - intellij-idea-community-edition
+    - eclipse-java
