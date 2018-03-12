@@ -15,6 +15,7 @@ EXCEPTIONS=("{{contest_server}}")
 ROUTE=/sbin/route
 IFCONFIG=/sbin/ifconfig
 IPTABLES=/usr/sbin/iptables
+IP6TABLES=/usr/sbin/ip6tables
 
 if [ -z "$1" -o -z "$2" ]; then
     echo "$0: Not enough parameters." 1>&2
@@ -48,6 +49,10 @@ up)
         $IPTABLES -P INPUT DROP
         $IPTABLES -P FORWARD DROP
         $IPTABLES -P OUTPUT DROP
+
+        $IP6TABLES -P INPUT DROP
+        $IP6TABLES -P FORWARD DROP
+        $IP6TABLES -P OUTPUT DROP       
 
         echo "Allowing ssh!"
 
@@ -101,6 +106,10 @@ down)
     $IPTABLES -P INPUT ACCEPT
     $IPTABLES -P FORWARD ACCEPT
     $IPTABLES -P OUTPUT ACCEPT
+
+    $IP6TABLES -P INPUT ACCEPT
+    $IP6TABLES -P FORWARD ACCEPT
+    $IP6TABLES -P OUTPUT ACCEPT
 
     echo "Detecting my IP addresses!"
     MYIPS=`$IFCONFIG | grep "inet" | grep -v "inet6" | awk '{print $2; }'`
