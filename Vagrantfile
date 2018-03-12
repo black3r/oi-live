@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
   # Second will contain the tools for building the image from the 
   # first one's virtual disk connected as a second drive.
   config.vm.define "builder", autostart: false do |builder|
-    builder.vm.box = "ogarcia/archlinux-x64"
+    builder.vm.box = "archlinux/archlinux" # Use different base box to avoid boot-time UUID conflicts
     builder.vm.box_check_update = false
     builder.vm.synced_folder "./output", "/vagrant"
     builder.vm.provider "virtualbox" do |vb|
