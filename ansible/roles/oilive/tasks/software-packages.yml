@@ -1,4 +1,4 @@
-# This is the standard software pack for oi-live
+# This is the standard software pack for oi-live (C++ and Pascal)
 - name: Install software packages
   pacman: name={{ item }} state=present
   with_items:
@@ -80,9 +80,26 @@
     - cppreference-qt
     - ttf-ms-fonts
 
+# These packages are optional for Java support
 - name: Install Java support + IntelliJ Community + Eclipse Java
   pacman: name={{ item }} state=present
   with_items:
     - jdk8-openjdk
     - intellij-idea-community-edition
     - eclipse-java
+
+# These packages are optional for C# support
+- name: Install mono and VS-Code for C#
+  command: yaourt -S --needed --noconfirm {{ item }}
+  become: yes
+  become_user: vagrant
+  become_method: su
+  with_items:
+    - visual-studio-code-bin
+    - mono
+
+# These packages are optional for Python support
+- name: Install PyCharm
+  pacman: name={{ item }} state=present
+  with_items:
+    - pycharm-community-edition

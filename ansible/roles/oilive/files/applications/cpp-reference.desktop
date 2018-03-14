@@ -1,6 +1,6 @@
 [Desktop Entry]
 Comment=
-Exec=kde-open /usr/share/doc/cppreference/en/index.html
+Exec=kde-open5 /usr/share/doc/cppreference/en/index.html
 Icon=accessories-dictionary
 Name=CPP reference
 NoDisplay=false

@@ -207,7 +207,7 @@ plugin=org.kde.plasma.icon
 applicationName=KDbg
 genericName=Debugger
 iconName=kdbg
-url=file:///usr/share/applications/kde4/kdbg.desktop
+url=file:///usr/share/applications/kdbg.desktop
 
 [Containments][23][Applets][33]
 immutability=1

@@ -110,7 +110,7 @@
 - name: chromium autostart
   lineinfile:
     dest: /usr/share/applications/chromium.desktop
-    regexp: "Exec="
+    regexp: "^Exec=(.*)%U$"
     line: "Exec=chromium {{contest_web}}"
 
 - name: firefox autostart

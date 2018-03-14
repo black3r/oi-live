@@ -1,6 +1,6 @@
 [Desktop Entry]
 Comment=
-Exec=kde-open /usr/share/doc/fpc-doc/doc/fpctoc.html
+Exec=kde-open5 /usr/share/doc/fpc-doc/doc/fpctoc.html
 Icon=accessories-dictionary
 Name=FreePascal docs
 NoDisplay=false

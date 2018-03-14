@@ -22,4 +22,4 @@
   user:
     name: root
     shell: /usr/bin/zsh
-    password: $6$rounds=656000$TuiOQmBsY2LOIx9l$UIL.7Ud28gIs04.ujctlLcgcwn0pSD7M8CKNuIGNt6R5HnNWaz2tIcmmM1B5nO0XBvzrdB6LjGORVYedrfF4K1
+    password: $6$EO4RVOGF06eCu2S7$samcdvYZNy1YwQEwpnkodX.402f1ozfYHYRUGAKCJRlXwaLdsdO79/nELGlPKgb4LxPFP1KiU.keAHCe.jX/40
