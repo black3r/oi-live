@@ -1,4 +1,3 @@
 playbook.retry
 .vagrant
-output/oi-boot.tar
-output/oi-live-2017.iso
+output/
