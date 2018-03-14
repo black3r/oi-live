@@ -80,3 +80,25 @@ release workflow:
 When you're finished and have got some spare time, you can always look at some
 of the issues on the tracker to make the OI-Live experience even better for 
 both users and deployers :)
+
+## How to deploy
+
+Some notes about how-to deploy without fuckups:
+
+- Flash USBs with the tested version of OI-Live before entering contest
+room to spare time.
+- Test all the USBs before entering contest room to spare time.
+- Before trying to boot the USB, boot into the computers main operating
+system and check for free space. You need iso size + 6GB for everything
+to work correctly. If there is not enough free space on computer, consult
+with local tech support.
+- Don't just stick the USB into a random port, look for the fastest port
+the computer can offer
+- Prefer boot menu over boot order settings in bios config.
+- `oi_debug` and `oi_root=` are your friends.
+- If the installer can't find installation sources, try booting with `oi_debug`
+(it may be caused by installer starting faster than USB stack initializes)
+- If X doesn't start, try booting with `nomodeset` or 
+`acpi_osi=! "acpi_osi=Windows 2009" acpi_osi=Linux`
+- You can edit default boot options on /boot/syslinux/entry_common.cfg on USB
+without rebuilding anything.
