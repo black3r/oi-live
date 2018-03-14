@@ -70,12 +70,12 @@ release workflow:
   - Try to run & build a hello world application in every language
   - Try to run the ISO on some real hardware
 - Customizing for the event.
-  - Modify build configuration in /group_vars/all/ with correct year
+  - Modify build configuration in `/group_vars/all/` with correct year
   and contest URL & IP
-  - Create new wallpapers and put them in /oilive/files/theme/
-  - Set a new root password in /oilive/tasks/oilive-users.yml
+  - Create new wallpapers and put them in `/oilive/files/theme/`
+  - Set a new root password in `/oilive/tasks/oilive-users.yml`
   - Customize icons on desktop in 
-  /oilive/files/home/.config/plasma-org.kde.plasma.desktop-appletsrc
+  `/oilive/files/home/.config/plasma-org.kde.plasma.desktop-appletsrc`
 
 When you're finished and have got some spare time, you can always look at some
 of the issues on the tracker to make the OI-Live experience even better for 
@@ -100,5 +100,5 @@ the computer can offer
 (it may be caused by installer starting faster than USB stack initializes)
 - If X doesn't start, try booting with `nomodeset` or 
 `acpi_osi=! "acpi_osi=Windows 2009" acpi_osi=Linux`
-- You can edit default boot options on /boot/syslinux/entry_common.cfg on USB
+- You can edit default boot options on `/boot/syslinux/entry_common.cfg` on USB
 without rebuilding anything.
