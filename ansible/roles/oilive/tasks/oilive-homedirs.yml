@@ -44,6 +44,26 @@
     - training
     - contest
 
+- name: pycharm provisioning
+  file:
+   path: /home/{{ item.user }}/.PyCharmCE2017.3/{{ item.folder }}/
+   state: directory
+  with_items:
+   - { user: "contest", folder: "config" }
+   - { user: "contest", folder: "system" }
+   - { user: "training", folder: "config" }
+   - { user: "training", folder: "system" }
+
+- name: intellij idea provisioning
+  file:
+   path: /home/{{ item.user }}/.IdeaIC2017.3/{{ item.folder }}/
+   state: directory
+  with_items:
+   - { user: "contest", folder: "config" }
+   - { user: "contest", folder: "system" }
+   - { user: "training", folder: "config" }
+   - { user: "training", folder: "system" }
+
 - name: contest homedir permissions
   file:
     path: /home/contest/
