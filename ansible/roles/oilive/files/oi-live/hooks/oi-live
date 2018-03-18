@@ -132,6 +132,10 @@ _mount_topmost_filesystem () {
         DEVICES="$oi_root"
     fi
 
+    if [ -n "$oi_delay" ]; then
+        sleep $oi_delay;
+    fi
+
     mkdir -p "$OI_MOUNTPOINT"
 
     for MYDEV in $DEVICES; do
