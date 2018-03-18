@@ -35,6 +35,11 @@
     owner: root
     group: root
 
+- name: ensure ext4 module is loaded before updating
+  modprobe: 
+    name: ext4
+    state: present
+
 - name: update system
   pacman:
     upgrade: yes
