@@ -79,3 +79,40 @@
     owner: training
     group: users
     recurse: yes
+
+- name: check if vscode is installed
+  stat:
+    path: /bin/code
+  register: code_stat_result
+
+- name: install vscode extensions
+  when: code_stat_result.stat.exists == True
+  command: code --install-extension {{ item.name }}
+  become: yes
+  become_user: "{{ item.user }}"  
+  with_items:
+  - { user: "contest", name: "ms-python.python" }
+  - { user: "contest", name: "ms-vscode.cpptools" }
+  - { user: "contest", name: "ms-vscode.csharp" }
+  - { user: "training", name: "ms-python.python" }
+  - { user: "training", name: "ms-vscode.cpptools" }
+  - { user: "training", name: "ms-vscode.csharp" }
+
+- name: prepare vscode extension post-install script
+  copy:
+    src: postinstall_vscode_ext.py
+    dest: /tmp/postinstall_vscode_ext.py
+
+- name: post-install vscode extensions
+  when: code_stat_result.stat.exists == True
+  command: python3 /tmp/postinstall_vscode_ext.py {{ item.name }}
+  become: yes
+  become_user: "{{ item.user }}"  
+  with_items:
+  - { user: "contest", name: "ms-python.python" }
+  - { user: "contest", name: "ms-vscode.cpptools" }
+  - { user: "contest", name: "ms-vscode.csharp" }
+  - { user: "training", name: "ms-python.python" }
+  - { user: "training", name: "ms-vscode.cpptools" }
+  - { user: "training", name: "ms-vscode.csharp" }
+  

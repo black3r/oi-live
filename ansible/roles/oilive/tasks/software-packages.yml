@@ -97,6 +97,17 @@
   with_items:
     - visual-studio-code-bin
     - mono
+    - dotnet-sdk
+
+# Initialize dotnet-sdk for C# support
+- name: Initialize dotnet-sdk for C# autocomplete support
+  command: dotnet complete
+
+# These packages are optional for node.js JavaScript support
+- name: Install NodeJS
+  pacman: name={{ item }} state=present
+  with_items:
+    - nodejs
 
 # These packages are optional for Python support
 - name: Install PyCharm
