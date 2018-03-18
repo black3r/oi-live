@@ -19,10 +19,12 @@ grep -v vagrant "$WORK_DIR/etc/shadow-" > "$WORK_DIR/etc/shadow"
 mkdir -p "$ISO_DIR"
 rm -rf "$ISO_DIR/*"
 # Create squashfs
-sudo ionice -c 3 mksquashfs "$WORK_DIR" "$SQUASH_PATH" -comp xz -b 1M -Xdict-size 100%
+sudo ionice -c 3 mksquashfs "$WORK_DIR" "$SQUASH_PATH" -noappend -comp xz -b 1M -Xdict-size 100%
 # Unpack oi-boot.tar
 cd "$ISO_DIR"
 tar xf "$OI_BOOT_PATH"
+# Remove the iso if it exists
+rm -f "$ISO_PATH"
 # Build the iso
 time ionice -c 3 mkisofs -pad -l -r -J -v -posix-L -x ./boot/boot -no-emul-boot -boot-load-size 4 -boot-info-table -b boot/syslinux/isolinux.bin -c boot/syslinux/boot.cat -hide-rr-moved -o "$ISO_PATH" -V "OI-Live {{version}}" ./
 isohybrid "$ISO_PATH"
