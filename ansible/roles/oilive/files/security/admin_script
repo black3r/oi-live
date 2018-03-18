@@ -22,11 +22,7 @@ setrights() {
     fi
 }
 
-#passwd -l root
 passwd -l training
 
 chmod 700 /mnt
 chown root.root /mnt
-
-chmod 700 /media
-chown root.root /media

@@ -19,9 +19,6 @@ setrights() {
     fi
 }
 
-#passwd -u root
 passwd -u training
 
 chmod 755 /mnt
-chmod 755 /media
-
