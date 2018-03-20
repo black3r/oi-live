@@ -96,9 +96,11 @@ with local tech support.
 the computer can offer
 - Prefer boot menu over boot order settings in bios config.
 - `oi_debug` and `oi_root=` are your friends.
-- If the installer can't find installation sources, try booting with `oi_debug`
-(it may be caused by installer starting faster than USB stack initializes)
+- Sometimes the installer starts faster than the USB stack initializes and
+can't find installation sources. To mitigate this, use `oi_delay=` to set
+the number of seconds the installer waits before trying to find sources,
+or try debugging with `oi_debug`.
 - If X doesn't start, try booting with `nomodeset` or 
-`acpi_osi=! "acpi_osi=Windows 2009" acpi_osi=Linux`
+`acpi_osi=! acpi_osi="Windows 2009" acpi_osi=Linux`
 - You can edit default boot options on `/boot/syslinux/entry_common.cfg` on USB
 without rebuilding anything.
